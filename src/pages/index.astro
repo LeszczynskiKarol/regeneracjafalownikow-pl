@@ -73,10 +73,33 @@ const faqs = [
 
 const jsonLd = [
   { "@context": "https://schema.org", "@type": "WebSite", name: siteConfig.name, url: siteConfig.url, inLanguage: "pl-PL" },
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: siteConfig.legal.adminName,
+    url: siteConfig.url,
+    email: siteConfig.contact.email,
+    telephone: siteConfig.contact.phone,
+    vatID: `PL${siteConfig.legal.adminNip}`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Mstowo 23",
+      postalCode: "87-860",
+      addressLocality: "Chodecz",
+      addressCountry: "PL",
+    },
+    openingHoursSpecification: [{
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "08:00",
+      closes: "16:00",
+    }],
+    areaServed: { "@type": "Country", name: "PL" },
+  },
   { "@context": "https://schema.org", "@type": "Service",
     name: "Regeneracja i naprawa falowników",
     serviceType: "Naprawa przemienników częstotliwości",
-    provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+    provider: { "@type": "Organization", name: siteConfig.legal.adminName, url: siteConfig.url },
     areaServed: { "@type": "Country", name: "PL" },
     description: "Diagnoza, naprawa, test pod obciążeniem i 12-miesięczna gwarancja na falowniki wszystkich marek, w tym Lenze, ABB, Siemens, Danfoss, SEW, Yaskawa." },
   { "@context": "https://schema.org", "@type": "FAQPage",
@@ -104,9 +127,9 @@ const jsonLd = [
           </p>
           <h1 class="mt-5 font-serif text-[length:var(--text-fs-display)] leading-[1.02] tracking-[-0.02em]">
             Falownik <span class="relative inline-block">
-              <span class="relative z-10">przestał działać?</span>
+              <span class="relative z-10">przestał działać</span>
               <span class="absolute inset-x-0 bottom-1 -z-0 h-3 bg-[var(--color-warm-soft)] sm:h-4" aria-hidden="true"></span>
-            </span>.
+            </span>?
             <span class="block mt-2 text-[var(--color-text-muted)]">Wiemy, co z tym zrobić.</span>
           </h1>
           <p class="mt-7 max-w-[58ch] text-lg text-[var(--color-text-muted)] leading-[1.65]">
@@ -485,6 +508,15 @@ const jsonLd = [
                 <div>
                   <p class="text-[0.72rem] uppercase tracking-[0.14em] text-[var(--color-text-faint)]">Godziny pracy</p>
                   <p class="mt-1 text-[var(--color-text-muted)]">poniedziałek – piątek, 8:00 – 16:00</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="icon-tile"><Icon name="factory" size={20} /></span>
+                <div>
+                  <p class="text-[0.72rem] uppercase tracking-[0.14em] text-[var(--color-text-faint)]">Adres serwisu</p>
+                  <p class="mt-1 text-[var(--color-text)]">{siteConfig.legal.adminName}</p>
+                  <p class="text-[var(--color-text-muted)]">{siteConfig.legal.adminAddress}</p>
+                  <p class="mt-1 font-mono text-sm text-[var(--color-text-faint)]">NIP: {siteConfig.legal.adminNip}</p>
                 </div>
               </li>
             </ul>

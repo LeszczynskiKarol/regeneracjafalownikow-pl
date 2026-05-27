@@ -9,11 +9,11 @@ export const siteConfig = {
   locale: "pl_PL",
   lang: "pl",
 
-  // Legal — placeholders. Karol uzupełnia po pierwszym launchu.
+  // Legal
   legal: {
-    adminName: "ADMIN_NAME_PLACEHOLDER",
-    adminAddress: "ADMIN_ADDRESS_PLACEHOLDER",
-    adminNip: "NIP_PLACEHOLDER",
+    adminName: "INVERTO Krzysztof Łukaszewicz",
+    adminAddress: "Mstowo 23, 87-860 Chodecz",
+    adminNip: "8882926027",
     adminEmail: "kontakt@regeneracjafalownikow.pl",
   },
 
@@ -35,7 +35,7 @@ export const siteConfig = {
   // Contact (footer / structured data)
   contact: {
     email: "kontakt@regeneracjafalownikow.pl",
-    phone: null as string | null,
+    phone: "+48 889 281 795" as string | null,
   },
 } as const;
 
