@@ -12,6 +12,11 @@ export default defineConfig({
       lastmod: new Date(),
       changefreq: "weekly",
       priority: 0.7,
+      // Wyklucz strony z noindex (polityka prywatności, regulamin gdy istnieje).
+      // Jeśli pojawią się kolejne wyindeksowane podstrony — dorzuć do tej listy.
+      filter: (page) =>
+        !page.includes("/polityka-prywatnosci") &&
+        !page.includes("/regulamin"),
       serialize(item) {
         if (item.url === `${SITE}/`) item.priority = 1.0;
         return item;
