@@ -1,0 +1,550 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { siteConfig } from "../config/site";
+
+const description =
+  "Regenerujemy falowniki wszystkich marek — z naciskiem na linię Lenze (ESMD, i500, 8200, 8400, 9300). " +
+  "Każda naprawa kończy się testem na hamowni i 12 miesięcy gwarancji.";
+
+const lenzeSeries = [
+  "ESMD",
+  "ESMV",
+  "i500",
+  "8200 Vector",
+  "8200 Motec",
+  "8400 Protec",
+  "8400 Motec",
+  "8400 TopLine",
+  "8400 HighLine",
+  "9300 EVS",
+  "9300 EVF",
+];
+
+const otherBrands = [
+  "ABB", "Siemens", "Danfoss", "KEB", "Toshiba", "SEW", "Yaskawa", "Fuji Electric",
+  "Allen Bradley", "Control Techniques", "Emerson", "Emotron", "Vacon", "Santerno",
+  "Omron", "Hitachi", "Eaton", "Moeller", "INVT", "Powtran", "Parker", "P-drive",
+  "Apator", "Twerd", "Bonfiglioli", "Toyo Denki", "Hyundai", "LS / LG",
+];
+
+const steps = [
+  {
+    n: "01",
+    title: "Przyjęcie i bezpłatna wycena",
+    text:
+      "Wysyłasz falownik kurierem albo zostawiasz w warsztacie. W standardzie dajemy wycenę bez opłaty — ekspres (do 2 dni roboczych) dla awarii produkcyjnych.",
+  },
+  {
+    n: "02",
+    title: "Diagnoza i raport",
+    text:
+      "Demontaż, pomiar mocy, pośredniego obwodu DC, sterowania i wyjścia. Sprawdzamy IGBT, kondensatory, gate drivery, czujniki temperatury, układ zasilania pomocniczego. Dostajesz raport z listą usterek i przyczyną.",
+  },
+  {
+    n: "03",
+    title: "Decyzja klienta",
+    text:
+      "Wycena trafia do Ciebie z konkretnymi pozycjami: części, robocizna, testy. Jeśli koszt przekracza sens ekonomiczny — wskazujemy alternatywę: regenerację z pełnym pakietem albo wymianę na inny przemiennik.",
+  },
+  {
+    n: "04",
+    title: "Naprawa wg procedury",
+    text:
+      "Wymiana komponentów na oryginalne lub równoważne (kondensatory elektrolityczne — zawsze świeże, z magazynu). Czyszczenie radiatorów, regeneracja gniazd, wymiana past termoprzewodzących, przegląd wentylatorów.",
+  },
+  {
+    n: "05",
+    title: "Test pod obciążeniem",
+    text:
+      "Każdy naprawiony falownik trafia na hamownię. Symulacja warunków pracy — start, rozbieg, hamowanie, praca ustalona, autotuning z silnikiem. Bez tego etapu nie wydajemy urządzenia.",
+  },
+  {
+    n: "06",
+    title: "Wydanie i 12 miesięcy gwarancji",
+    text:
+      "Protokół naprawy z parametrami, listą wymienionych podzespołów i zaleceniami eksploatacyjnymi. Gwarancja obejmuje cały zakres wykonanych prac. Wsparcie techniczne po naprawie — bez naliczania konsultacji.",
+  },
+];
+
+const periodicChecks = [
+  "Demontaż obudowy, ocena stanu wzrokowa",
+  "Czyszczenie radiatorów i kanałów wentylacji ze spalin, pyłu, oleju",
+  "Sprawdzenie wentylatorów — luz osi, pobór prądu, drgania",
+  "Pomiar pojemności kondensatorów elektrolitycznych w obwodzie pośrednim",
+  "Dokręcenie połączeń mocy i sterujących (moment kontrolny producenta)",
+  "Pomiar napięć DC link, układu zasilania pomocniczego, izolacji",
+  "Test pracy z silnikiem — przyspieszenie, hamowanie, autotuning",
+  "Zgranie wszystkich parametrów falownika do pliku (kopia konfiguracji)",
+  "Protokół z zaleceniami: co wymienić teraz, co obserwować, kiedy następny przegląd",
+];
+
+const faqs = [
+  {
+    q: "Ile kosztuje naprawa falownika?",
+    a:
+      "Sama wycena jest bezpłatna — diagnozujemy i podajemy kwotę przed rozpoczęciem prac. Cena zależy od mocy, marki, charakteru usterki i dostępności podzespołów. Najczęstszy zakres to 800–3500 zł netto dla falowników do 22 kW. W przypadku dużych napędów (75 kW+) wycena indywidualna.",
+  },
+  {
+    q: "Jak długo trwa naprawa?",
+    a:
+      "Standardowo 5–10 dni roboczych od dostarczenia falownika. Tryb ekspres (priorytet dla awarii produkcyjnych): wycena do 2 dni roboczych, naprawa do 3–5 dni od akceptacji. Jeśli czas zatrzymania linii to pieniądze — daj znać przy zgłoszeniu, ułożymy harmonogram.",
+  },
+  {
+    q: "Co jeśli naprawa się nie uda?",
+    a:
+      "Rozliczamy się tylko za skuteczną naprawę. Jeśli urządzenie jest niemożliwe do uratowania (np. przepalona płytka główna bez dokumentacji producenta), nie obciążamy Cię diagnozą. Zaproponujemy zamiennik albo zwrócimy falownik w stanie po demontażu.",
+  },
+  {
+    q: "Czy odbieracie urządzenie z zakładu?",
+    a:
+      "Wysyłka działa szybciej i jest tańsza — pakujemy zalecenia transportowe na stronie. Dla większych falowników (od 30 kW) albo zestawów awaryjnych dojeżdżamy: serwis na obiekcie, demontaż i transport po naszej stronie.",
+  },
+  {
+    q: "Jaką dajecie gwarancję?",
+    a:
+      "12 miesięcy na cały zakres wykonanych prac, liczone od daty wydania urządzenia. Gwarancja obejmuje pracę napędu w warunkach zgodnych z kartą katalogową (temperatura otoczenia, zapylenie, klasa szczelności). Po naprawie udzielamy wsparcia technicznego — bez liczenia każdej rozmowy telefonicznej.",
+  },
+  {
+    q: "Czy specjalizujecie się w Lenze?",
+    a:
+      "Tak. Lenze to gros naszej pracy — wszystkie serie od starszych ESMD i 8200 Vector, przez 8400 Protec/Motec/TopLine/HighLine, po 9300 (EVS i EVF) i nowsze i500. Mamy własny magazyn części zamiennych do tych modeli, dlatego naprawa Lenze idzie u nas najszybciej.",
+  },
+  {
+    q: "Mam falownik z obejściem, mostkiem, ktoś już próbował naprawiać. Bierzecie takie?",
+    a:
+      "Bierzemy, ale uprzedzamy: skuteczność spada drastycznie. Każdy mostek na ścieżce, każda spalona droga, każdy przepalony układ scalony zdjęty bez dokumentacji to godziny ekstra. Czasem nadal da się uratować — czasem ekonomicznie nie. W wycenie zaznaczamy ryzyko otwarcie.",
+  },
+  {
+    q: "Czy robicie przeglądy okresowe falowników w zakładzie?",
+    a:
+      "Tak, w ramach stałych umów serwisowych albo jednorazowo. Przyjeżdżamy ze sprzętem pomiarowym, robimy przegląd zgodnie z procedurą producenta, zostawiamy protokół. Po jednym pełnym przeglądzie urządzenia mamy jego parametry zapisane — następny idzie szybciej.",
+  },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    inLanguage: "pl-PL",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Regeneracja i naprawa falowników",
+    serviceType: "Naprawa przemienników częstotliwości",
+    provider: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    areaServed: { "@type": "Country", name: "PL" },
+    description:
+      "Diagnoza, naprawa, test pod obciążeniem i 12-miesięczna gwarancja na falowniki wszystkich marek, w tym Lenze, ABB, Siemens, Danfoss, SEW, Yaskawa.",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title={`${siteConfig.name} — naprawa, regeneracja, przeglądy`}
+  description={description}
+  jsonLd={jsonLd}
+>
+  <SiteHeader />
+
+  <main id="main">
+    <section class="border-b border-[var(--color-border)]">
+      <div class="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-28">
+        <div>
+          <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-accent)]">
+            Serwis przemienników częstotliwości
+          </p>
+          <h1 class="mt-4 font-serif text-[length:var(--text-fs-display)] leading-[1.05]">
+            Falownik przestał działać.
+            <span class="block text-[var(--color-text-muted)]">Wiemy, co z tym zrobić.</span>
+          </h1>
+          <p class="mt-6 max-w-[55ch] text-lg text-[var(--color-text-muted)]">
+            Naprawiamy falowniki przemysłowe wszystkich marek. Każde urządzenie po naprawie
+            trafia na hamownię — testujemy pod obciążeniem, nie tylko pomiarem multimetrem.
+            Specjalizacja: pełna linia Lenze, od ESMD po 9300.
+          </p>
+          <div class="mt-10 flex flex-wrap items-center gap-3">
+            <a
+              href="#kontakt"
+              class="inline-flex items-center rounded-md bg-[var(--color-accent)] px-6 py-3 text-base font-medium text-[var(--color-accent-fg)] no-underline hover:bg-[var(--color-accent-hover)]"
+            >
+              Wyślij falownik do wyceny
+            </a>
+            <a
+              href="#proces"
+              class="inline-flex items-center rounded-md border border-[var(--color-border)] px-6 py-3 text-base font-medium text-[var(--color-text)] no-underline hover:bg-[var(--color-bg-subtle)]"
+            >
+              Jak to wygląda
+            </a>
+          </div>
+          <dl class="mt-12 grid grid-cols-3 gap-6 border-t border-[var(--color-border)] pt-8">
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">Gwarancja</dt>
+              <dd class="mt-1 font-serif text-2xl font-semibold text-[var(--color-text)]">12 m-cy</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">Wycena</dt>
+              <dd class="mt-1 font-serif text-2xl font-semibold text-[var(--color-text)]">bez opłat</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">Doświadczenie</dt>
+              <dd class="mt-1 font-serif text-2xl font-semibold text-[var(--color-text)]">20+ lat</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="relative hidden lg:block">
+          <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-[var(--color-bg-subtle)] to-[var(--color-bg-elevated)] ring-1 ring-[var(--color-border)]" aria-hidden="true"></div>
+          <svg viewBox="0 0 480 480" class="relative h-full w-full p-10" aria-hidden="true" role="img">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.18" />
+                <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <rect x="100" y="80" width="280" height="320" rx="10" fill="var(--color-bg-elevated)" stroke="var(--color-border)" stroke-width="2" />
+            <rect x="140" y="110" width="200" height="60" rx="4" fill="url(#g1)" stroke="var(--color-accent)" stroke-width="1.5" />
+            <text x="240" y="148" text-anchor="middle" font-family="ui-monospace, monospace" font-size="22" fill="var(--color-accent)">RUN  50.0 Hz</text>
+            <circle cx="160" cy="200" r="5" fill="var(--color-accent)" />
+            <circle cx="190" cy="200" r="5" fill="var(--color-text-faint)" opacity="0.5" />
+            <circle cx="220" cy="200" r="5" fill="var(--color-text-faint)" opacity="0.5" />
+            <circle cx="240" cy="280" r="38" fill="var(--color-bg-subtle)" stroke="var(--color-border)" stroke-width="2" />
+            <line x1="240" y1="280" x2="240" y2="252" stroke="var(--color-accent)" stroke-width="3" stroke-linecap="round" />
+            <g stroke="var(--color-border)" stroke-width="1.5">
+              <line x1="140" y1="340" x2="340" y2="340" />
+              <line x1="140" y1="355" x2="340" y2="355" />
+              <line x1="140" y1="370" x2="340" y2="370" />
+              <line x1="140" y1="385" x2="340" y2="385" />
+            </g>
+            <polyline
+              points="40,440 80,440 80,420 110,420 110,460 140,460 140,420 170,420 170,460 200,460"
+              fill="none"
+              stroke="var(--color-accent)"
+              stroke-width="2"
+              opacity="0.6"
+            />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="oferta" class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+      <div class="max-w-3xl">
+        <h2 class="font-serif">Falowniki, przemienniki, napędy regulowane — naprawiamy wszystko, co przetwarza energię dla silnika</h2>
+        <p class="mt-5 text-[var(--color-text-muted)]">
+          Pracujemy z urządzeniami od kilkuset watów do kilkuset kilowatów — od kompaktowych
+          przemienników w maszynach pakujących po duże napędy w transporcie wewnątrzzakładowym.
+          Diagnoza zaczyna się od mostka prostowniczego i kondensatorów obwodu DC, a kończy
+          na sterowniku, gate driverach i komunikacji (Profibus, CANopen, EtherCAT, Modbus).
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-8 lg:grid-cols-3">
+        <article class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6">
+          <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-accent)]">Specjalizacja</p>
+          <h3 class="mt-2 font-serif">Lenze — wszystkie serie</h3>
+          <p class="mt-3 text-[var(--color-text-muted)]">
+            Mamy własny magazyn części, dokumentację serwisową i procedury testowe do każdej linii.
+            Dlatego Lenze idzie u nas najszybciej i najtaniej.
+          </p>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {lenzeSeries.map((s) => (
+              <li><span class="brand-chip font-mono text-[0.875rem]">{s}</span></li>
+            ))}
+          </ul>
+        </article>
+
+        <article class="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-6 lg:col-span-2">
+          <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-accent)]">Pozostałe marki</p>
+          <h3 class="mt-2 font-serif">Standardowo serwisujemy</h3>
+          <p class="mt-3 text-[var(--color-text-muted)]">
+            Dla każdej z marek poniżej mamy procedurę diagnostyczną, dostęp do podzespołów
+            i przejście „od testu wstępnego do hamowni". Jeśli Twojej marki nie ma na liście —
+            i tak zapytaj. W praktyce niemal wszystkie współczesne falowniki przemysłowe
+            mają podobne wąskie gardła: kondensatory DC, IGBT, gate drivery, zasilanie pomocnicze.
+          </p>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {otherBrands.map((b) => (
+              <li><span class="brand-chip">{b}</span></li>
+            ))}
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="proces" class="border-y border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+        <div class="max-w-3xl">
+          <h2 class="font-serif">Sześć kroków od zgłoszenia do uruchomienia</h2>
+          <p class="mt-5 text-[var(--color-text-muted)]">
+            Każda naprawa idzie tą samą ścieżką — bez skrótów, bez „a może wystarczy wymienić tylko bezpiecznik".
+            To procedura, którą docieraliśmy przez dwie dekady.
+          </p>
+        </div>
+
+        <ol class="mt-12 space-y-8">
+          {steps.map((s) => (
+            <li class="flex items-start gap-5 sm:gap-6">
+              <span class="step-num" aria-hidden="true">{s.n}</span>
+              <div>
+                <h3 class="font-serif text-[length:var(--text-fs-h3)]">{s.title}</h3>
+                <p class="mt-2 max-w-[65ch] text-[var(--color-text-muted)]">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-accent)]">Testy pod obciążeniem</p>
+          <h2 class="mt-4 font-serif">Multimetrem każdy potrafi.<br />My puszczamy napęd na hamownię.</h2>
+        </div>
+        <div class="text-[var(--color-text-muted)]">
+          <p>
+            Falownik wygląda na sprawny: zapala się, ekran pokazuje napięcie, nie wyrzuca błędu.
+            Pierwsza próba pod realnym silnikiem i wyłącza się po 20 sekundach z OC.{" "}
+            <strong class="text-[var(--color-text)]">Bo testowany był na biegu jałowym, a nie pod obciążeniem.</strong>
+          </p>
+          <p class="mt-4">
+            U nas każdy naprawiony przemiennik trafia na stanowisko hamulcowe. Symulujemy
+            rozbieg z dynamiką typową dla branży klienta (taśmociąg, pompa, wentylator, sprężarka),
+            sprawdzamy przeciążenie chwilowe, hamowanie regeneracyjne, pracę z autotuningiem.
+            Dopiero po pełnym cyklu testów wystawiamy protokół naprawy.
+          </p>
+          <p class="mt-4">
+            Mamy dwie hamownie o różnych zakresach mocy plus stanowiska do testów sygnałów sterujących —
+            sprawdzimy też komunikację magistralą, wejścia analogowe, enkodery.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="przeglady" class="border-y border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+        <div class="max-w-3xl">
+          <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-accent)]">Prewencja</p>
+          <h2 class="mt-4 font-serif">Przegląd okresowy to taniej niż awaria w piątek o 14:30</h2>
+          <p class="mt-5 text-[var(--color-text-muted)]">
+            Falownik to nie układ scalony, który albo działa, albo nie. Kondensatory elektrolityczne
+            tracą pojemność z czasem — szczególnie w pyle, wilgoci i temperaturze powyżej 35 °C.
+            Wentylatory zacierają się stopniowo. Pasta termoprzewodząca wysycha po 5–7 latach
+            i wtedy IGBT zaczyna pracować w temperaturze, na którą nie został zaprojektowany.
+          </p>
+          <p class="mt-4 text-[var(--color-text-muted)]">
+            Standardowy przegląd robimy w jeden dzień. W ramach stałych umów serwisowych
+            układamy harmonogram pod kalendarz Twoich postojów technologicznych.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-3 sm:grid-cols-2">
+          {periodicChecks.map((item) => (
+            <div class="flex items-start gap-3 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-elevated)] p-4">
+              <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--color-accent)]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.7 5.3a1 1 0 0 1 0 1.4l-7 7a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L9 11.6l6.3-6.3a1 1 0 0 1 1.4 0z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-[0.9375rem] text-[var(--color-text)]">{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+      <div class="max-w-3xl">
+        <h2 class="font-serif">Dlaczego klienci wracają</h2>
+        <p class="mt-5 text-[var(--color-text-muted)]">
+          Cztery rzeczy, które się powtarzają w rozmowach po latach współpracy.
+        </p>
+      </div>
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:gap-12">
+        <div>
+          <h3 class="font-serif">Płacisz za skuteczność</h3>
+          <p class="mt-3 text-[var(--color-text-muted)]">
+            Jeśli nie udało się uratować urządzenia — nie płacisz za diagnozę. Bez „opłaty
+            za przyjęcie", „kosztu otwarcia obudowy" i innych pozycji, które potem widać na FV.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-serif">Wiesz, co się dzieje</h3>
+          <p class="mt-3 text-[var(--color-text-muted)]">
+            Każde urządzenie jest w naszym systemie. Możesz w każdej chwili zapytać o status,
+            dostać raport pośredni, sprawdzić co dokładnie wymieniliśmy 3 lata temu.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-serif">Magazyn części</h3>
+          <p class="mt-3 text-[var(--color-text-muted)]">
+            Trzymamy zapas kondensatorów elektrolitycznych, IGBT, modułów sterujących i wentylatorów
+            do najczęściej naprawianych modeli. Skraca to czas naprawy zwykle o 5–10 dni.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-serif">Wsparcie po naprawie</h3>
+          <p class="mt-3 text-[var(--color-text-muted)]">
+            Po zamontowaniu urządzenia na obiekcie zdarzają się sytuacje, które wymagają konsultacji
+            — parametryzacja, autotuning z konkretnym silnikiem, integracja ze sterownikiem.
+            Bierzemy telefon, nie dorzucamy faktury.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="border-y border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+      <div class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:py-24">
+        <h2 class="font-serif">Najczęstsze pytania</h2>
+        <div class="mt-10">
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <div>{f.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="kontakt" class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+      <div class="grid gap-12 lg:grid-cols-5 lg:gap-16">
+        <div class="lg:col-span-2">
+          <h2 class="font-serif">Wyślij falownik do wyceny</h2>
+          <p class="mt-5 text-[var(--color-text-muted)]">
+            Wypełnij formularz albo napisz e-mail. Odpisujemy zwykle tego samego dnia roboczego.
+            Jeśli to awaria produkcyjna — zaznacz tryb ekspres, wycenę dostajesz w 24–48 h.
+          </p>
+          <dl class="mt-8 space-y-4 text-[var(--color-text-muted)]">
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">E-mail</dt>
+              <dd class="mt-1"><a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a></dd>
+            </div>
+            {siteConfig.contact.phone && (
+              <div>
+                <dt class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">Telefon</dt>
+                <dd class="mt-1"><a href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}>{siteConfig.contact.phone}</a></dd>
+              </div>
+            )}
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">Godziny pracy</dt>
+              <dd class="mt-1">poniedziałek – piątek, 8:00 – 16:00</dd>
+            </div>
+          </dl>
+        </div>
+
+        <form id="contact-form" class="lg:col-span-3" novalidate>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div class="sm:col-span-1">
+              <label class="form-label" for="cf-name">Imię i nazwisko / firma <span class="text-[var(--color-accent)]">*</span></label>
+              <input id="cf-name" name="name" type="text" required class="form-input" autocomplete="organization" />
+            </div>
+            <div class="sm:col-span-1">
+              <label class="form-label" for="cf-email">E-mail <span class="text-[var(--color-accent)]">*</span></label>
+              <input id="cf-email" name="email" type="email" required class="form-input" autocomplete="email" />
+            </div>
+            <div class="sm:col-span-1">
+              <label class="form-label" for="cf-phone">Telefon</label>
+              <input id="cf-phone" name="phone" type="tel" class="form-input" autocomplete="tel" />
+            </div>
+            <div class="sm:col-span-1">
+              <label class="form-label" for="cf-model">Marka i model falownika</label>
+              <input id="cf-model" name="model" type="text" class="form-input" placeholder="np. Lenze 8400 HighLine 11 kW" />
+            </div>
+            {/* Honeypot — boty wypełnią, ludzie nie zobaczą */}
+            <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+              <label for="cf-company">Firma (zostaw puste)</label>
+              <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="form-label" for="cf-message">Opis usterki <span class="text-[var(--color-accent)]">*</span></label>
+              <textarea id="cf-message" name="message" required rows="5" class="form-input" placeholder="Co się dzieje, kiedy się dzieje, jakie kody błędów na wyświetlaczu…"></textarea>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="flex items-start gap-3 text-sm text-[var(--color-text-muted)]">
+                <input type="checkbox" name="urgent" value="1" class="mt-1" />
+                <span>Tryb ekspres — to awaria produkcyjna, czekam na wycenę pilnie.</span>
+              </label>
+              <label class="mt-3 flex items-start gap-3 text-sm text-[var(--color-text-muted)]">
+                <input type="checkbox" name="rodo" required class="mt-1" />
+                <span>
+                  Zgadzam się na przetwarzanie podanych danych w celu odpowiedzi na zapytanie.{" "}
+                  <a href="/polityka-prywatnosci">Polityka prywatności</a>.
+                </span>
+              </label>
+            </div>
+            <div class="sm:col-span-2">
+              <button
+                type="submit"
+                class="inline-flex items-center rounded-md bg-[var(--color-accent)] px-6 py-3 text-base font-medium text-[var(--color-accent-fg)] no-underline hover:bg-[var(--color-accent-hover)]"
+              >
+                Wyślij zapytanie
+              </button>
+            </div>
+          </div>
+          <p id="cf-status" class="mt-4 hidden text-sm" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+
+  <script
+    is:inline
+    define:vars={{ apiBase: import.meta.env.PUBLIC_API_BASE_URL || "" }}
+  >
+    (function () {
+      var form = document.getElementById("contact-form");
+      if (!form) return;
+      var status = document.getElementById("cf-status");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        var data = Object.fromEntries(new FormData(form).entries());
+        status.classList.remove("hidden");
+        status.textContent = "Wysyłam…";
+        status.style.color = "var(--color-text-muted)";
+
+        if (!apiBase) {
+          status.textContent = "Formularz w trakcie konfiguracji. Napisz proszę bezpośrednio na adres e-mail.";
+          status.style.color = "var(--color-text-muted)";
+          return;
+        }
+
+        fetch(apiBase.replace(/\/$/, "") + "/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+          .then(function () {
+            status.textContent = "Dziękujemy. Wiadomość trafiła do nas — odezwiemy się tego samego dnia roboczego.";
+            status.style.color = "var(--color-accent)";
+            form.reset();
+          })
+          .catch(function () {
+            status.textContent = "Nie udało się wysłać. Napisz proszę bezpośrednio na adres e-mail.";
+            status.style.color = "#dc2626";
+          });
+      });
+    })();
+  </script>
+</BaseLayout>

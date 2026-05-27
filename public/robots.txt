@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.regeneracjafalownikow.pl/sitemap-index.xml

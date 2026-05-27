@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { siteConfig } from "../../config/site";
+
+const ADMIN = siteConfig.legal.adminName;
+const ADMIN_ADDRESS = siteConfig.legal.adminAddress;
+const ADMIN_NIP = siteConfig.legal.adminNip;
+const ADMIN_EMAIL = siteConfig.legal.adminEmail;
+const DOMAIN = new URL(siteConfig.url).hostname;
+const HAS_ANALYTICS = !!siteConfig.features.ga4;
+const HAS_CONTACT_FORM = siteConfig.features.contactForm;
+---
+
+<BaseLayout
+  title="Polityka prywatności"
+  description={`Polityka prywatności serwisu ${DOMAIN}.`}
+  noindex
+>
+  <main id="main" class="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+    <h1 class="font-serif text-[length:var(--text-fs-h1)] leading-tight">
+      Polityka prywatności
+    </h1>
+
+    <p class="mt-4 text-sm text-[var(--color-text-faint)]">
+      Ostatnia aktualizacja: {new Date().toISOString().slice(0, 10)}
+    </p>
+
+    <div class="prose mt-10 max-w-none">
+      <h2>1. Administrator danych</h2>
+      <p>
+        Administratorem danych osobowych jest {ADMIN}, {ADMIN_ADDRESS},
+        NIP: {ADMIN_NIP}. Kontakt w sprawach RODO: <a href={`mailto:${ADMIN_EMAIL}`}>{ADMIN_EMAIL}</a>.
+      </p>
+
+      <h2>2. Jakie dane zbieramy</h2>
+      <p>
+        Zbieramy wyłącznie te dane, które sam zostawisz w formularzu kontaktowym (imię, e-mail,
+        telefon, treść wiadomości, ewentualne załączniki) oraz — jeśli wyrazisz na to zgodę —
+        anonimowe dane analityczne z Google Analytics 4 (kraj, urządzenie, długość wizyty).
+      </p>
+
+      <h2>3. Po co je przetwarzamy</h2>
+      <ul>
+        <li>Aby odpowiedzieć na Twoje zapytanie (podstawa: art. 6 ust. 1 lit. b RODO).</li>
+        <li>Do prowadzenia statystyk ruchu, ale tylko jeśli klikniesz „Akceptuję” w banerze cookies (podstawa: art. 6 ust. 1 lit. a RODO).</li>
+      </ul>
+
+      <h2>4. Jak długo</h2>
+      <p>
+        Wiadomości z formularza: 3 lata. Załączniki: 30 dni (potem auto-usuwane z bucketu S3).
+        Dane analityczne: zgodnie z domyślnym terminem retencji GA4 (14 miesięcy).
+      </p>
+
+      <h2>5. Komu przekazujemy</h2>
+      <p>
+        Dostawcy infrastruktury, z których korzystamy: Amazon Web Services (hosting, e-mail outbound),
+        Google (analityka, jeśli wyrazisz zgodę). Nie sprzedajemy danych, nie udostępniamy ich osobom trzecim
+        w celach marketingowych.
+      </p>
+
+      <h2>6. Twoje prawa</h2>
+      <p>
+        Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przeniesienia
+        oraz wniesienia sprzeciwu. Możesz też wycofać zgodę na cookies w dowolnym momencie (w banerze cookies).
+        Skargę możesz złożyć do Prezesa Urzędu Ochrony Danych Osobowych.
+      </p>
+
+      <h2>7. Pliki cookies</h2>
+      <p>
+        Strona używa:
+      </p>
+      <ul>
+        <li><strong>Funkcjonalnych</strong> (zapamiętanie wyboru motywu jasny/ciemny, zgody na cookies) — bez nich strona nie działa poprawnie.</li>
+        <li><strong>Analitycznych</strong> (GA4) — tylko po Twojej zgodzie, anonimizowane, IP maskowane.</li>
+      </ul>
+
+      <h2>8. Kontakt</h2>
+      <p>
+        W sprawach związanych z danymi osobowymi pisz na <a href={`mailto:${ADMIN_EMAIL}`}>{ADMIN_EMAIL}</a>.
+      </p>
+    </div>
+  </main>
+</BaseLayout>

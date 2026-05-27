@@ -1,0 +1,61 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formatter = new Intl.DateTimeFormat("pl-PL", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
+};
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} jsonLd={jsonLd}>
+  <SiteHeader current="blog" />
+
+  <main id="main" class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:py-24">
+    <article>
+      <p class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">
+        <a href="/blog" class="text-[var(--color-text-faint)]">← Blog</a>
+        <span class="mx-2">·</span>
+        <time datetime={post.data.pubDate.toISOString()}>{formatter.format(post.data.pubDate)}</time>
+      </p>
+      <h1 class="mt-4 font-serif text-[length:var(--text-fs-h1)] leading-tight">
+        {post.data.title}
+      </h1>
+      <p class="mt-5 text-lg text-[var(--color-text-muted)]">{post.data.description}</p>
+
+      <div class="prose mt-12 max-w-none">
+        <Content />
+      </div>
+
+      {post.data.tags.length > 0 && (
+        <ul class="mt-12 flex flex-wrap gap-2 border-t border-[var(--color-border)] pt-8">
+          {post.data.tags.map((t) => (
+            <li class="brand-chip font-mono text-[0.8125rem]">#{t}</li>
+          ))}
+        </ul>
+      )}
+    </article>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

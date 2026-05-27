@@ -1,0 +1,63 @@
+---
+import { siteConfig } from "../config/site";
+
+const year = new Date().getFullYear();
+const hasLegal = !siteConfig.legal.adminName.startsWith("ADMIN_NAME_PLACEHOLDER");
+---
+
+<footer class="mt-24 border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
+    <div>
+      <p class="font-serif text-lg font-semibold text-[var(--color-text)]">Regeneracja Falowników</p>
+      <p class="mt-3 text-sm text-[var(--color-text-muted)]">
+        Naprawa, regeneracja i przeglądy okresowe przemienników częstotliwości
+        wszystkich marek. Hamownia, testy pod obciążeniem, 12 miesięcy gwarancji.
+      </p>
+    </div>
+
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-text-faint)]">Strona</p>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li><a href="/#oferta" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">Co naprawiamy</a></li>
+        <li><a href="/#proces" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">Jak wygląda naprawa</a></li>
+        <li><a href="/#przeglady" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">Przeglądy okresowe</a></li>
+        <li><a href="/#faq" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">FAQ</a></li>
+        {siteConfig.features.hasBlog && (
+          <li><a href="/blog" class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">Blog</a></li>
+        )}
+      </ul>
+    </div>
+
+    <div>
+      <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-text-faint)]">Kontakt</p>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li>
+          <a href={`mailto:${siteConfig.contact.email}`} class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">
+            {siteConfig.contact.email}
+          </a>
+        </li>
+        {siteConfig.contact.phone && (
+          <li>
+            <a href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`} class="text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]">
+              {siteConfig.contact.phone}
+            </a>
+          </li>
+        )}
+        {hasLegal && (
+          <>
+            <li class="text-[var(--color-text-muted)]">{siteConfig.legal.adminName}</li>
+            <li class="text-[var(--color-text-muted)]">{siteConfig.legal.adminAddress}</li>
+            <li class="text-[var(--color-text-muted)]">NIP: {siteConfig.legal.adminNip}</li>
+          </>
+        )}
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-[var(--color-border)]">
+    <div class="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-4 py-5 text-xs text-[var(--color-text-faint)] sm:flex-row sm:items-center sm:px-6 lg:px-8">
+      <p>© {year} {siteConfig.name}. Wszystkie prawa zastrzeżone.</p>
+      <p><a href="/polityka-prywatnosci" class="text-[var(--color-text-muted)]">Polityka prywatności</a></p>
+    </div>
+  </div>
+</footer>

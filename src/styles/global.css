@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* ──────────────────────────────────────────────────
+   Design tokens — regeneracjafalownikow.pl
+   Preset: corporate (industrial / utrzymanie ruchu)
+   ────────────────────────────────────────────────── */
+@theme {
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --text-fs-display: clamp(2.5rem, 1.4rem + 4.5vw, 4.5rem);
+  --text-fs-h1: clamp(2.125rem, 1.3rem + 3.2vw, 3.375rem);
+  --text-fs-h2: clamp(1.625rem, 1.15rem + 1.8vw, 2.25rem);
+  --text-fs-h3: clamp(1.25rem, 1.05rem + 0.85vw, 1.625rem);
+  --text-fs-body: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem);
+
+  --color-bg: #f8fafc;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #f1f5f9;
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-faint: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-accent: #0f4c81;
+  --color-accent-hover: #0b3a66;
+  --color-accent-fg: #ffffff;
+}
+
+html.dark {
+  --color-bg: #0b1220;
+  --color-bg-elevated: #0f172a;
+  --color-bg-subtle: #1e293b;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-text-faint: #64748b;
+  --color-border: #1e293b;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-accent-fg: #0b1220;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-fs-body);
+  line-height: 1.7;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.011em;
+  line-height: 1.2;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+h1 { font-size: var(--text-fs-h1); }
+h2 { font-size: var(--text-fs-h2); }
+h3 { font-size: var(--text-fs-h3); }
+
+p { max-width: 70ch; }
+
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: opacity 200ms;
+}
+a:hover { opacity: 0.75; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  padding: 0.75rem 1.25rem;
+  z-index: 100;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.no-js .needs-js { display: none; }
+
+/* Prose dla polityki prywatności i bloga */
+.prose h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  font-size: var(--text-fs-h3);
+}
+.prose p, .prose ul, .prose ol {
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+}
+.prose ul { list-style: disc; padding-left: 1.5rem; }
+.prose ol { list-style: decimal; padding-left: 1.5rem; }
+.prose li + li { margin-top: 0.5rem; }
+.prose a { color: var(--color-accent); }
+
+/* Numerowane kroki w sekcji „proces" */
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Chip dla marek */
+.brand-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  transition: border-color 200ms;
+}
+.brand-chip:hover { border-color: var(--color-accent); }
+
+/* Form */
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 200ms, box-shadow 200ms;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+.form-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* FAQ */
+details {
+  border-top: 1px solid var(--color-border);
+  padding: 1.25rem 0;
+}
+details:last-of-type { border-bottom: 1px solid var(--color-border); }
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-text);
+}
+details > summary::-webkit-details-marker { display: none; }
+details > summary::after {
+  content: "";
+  width: 0.625rem;
+  height: 0.625rem;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  transition: transform 200ms;
+  flex-shrink: 0;
+}
+details[open] > summary::after { transform: rotate(-135deg); }
+details > div {
+  margin-top: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}

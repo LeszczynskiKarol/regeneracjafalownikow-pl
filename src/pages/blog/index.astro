@@ -1,0 +1,82 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import { siteConfig } from "../../config/site";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const formatter = new Intl.DateTimeFormat("pl-PL", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+---
+
+<BaseLayout
+  title="Blog — wiedza o falownikach"
+  description="Praktyczne artykuły o naprawie, diagnozie i eksploatacji przemienników częstotliwości. Pisane przez serwisantów dla utrzymania ruchu."
+>
+  <SiteHeader current="blog" />
+
+  <main id="main" class="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:py-24">
+    <header>
+      <p class="text-sm font-medium uppercase tracking-wider text-[var(--color-accent)]">Blog</p>
+      <h1 class="mt-4 font-serif text-[length:var(--text-fs-h1)] leading-tight">
+        Wiedza serwisowa — bez owijania w bawełnę
+      </h1>
+      <p class="mt-6 max-w-[60ch] text-lg text-[var(--color-text-muted)]">
+        Notatki z warsztatu: konkretne usterki, kody błędów, decyzje typu „naprawiać czy wymienić",
+        zasady eksploatacji falowników w pyle, wilgoci i wysokiej temperaturze.
+      </p>
+    </header>
+
+    <section class="mt-14">
+      {posts.length === 0 ? (
+        <div class="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-10 text-center">
+          <p class="font-serif text-xl text-[var(--color-text)]">Wkrótce pierwszy wpis</p>
+          <p class="mt-3 max-w-[55ch] mx-auto text-[var(--color-text-muted)]">
+            Przygotowujemy materiały o najczęstszych usterkach poszczególnych serii Lenze,
+            o kodach błędów ABB i Danfoss oraz o tym, czego nigdy nie wolno robić podczas pomiaru kondensatorów DC link
+            zaraz po wyłączeniu zasilania.
+          </p>
+          <p class="mt-6">
+            <a href="/#kontakt" class="inline-flex items-center text-[var(--color-accent)]">
+              Tymczasem — wyślij falownik do wyceny →
+            </a>
+          </p>
+        </div>
+      ) : (
+        <ul class="divide-y divide-[var(--color-border)]">
+          {posts.map((post) => (
+            <li class="py-8">
+              <article>
+                <p class="text-xs uppercase tracking-wider text-[var(--color-text-faint)]">
+                  <time datetime={post.data.pubDate.toISOString()}>{formatter.format(post.data.pubDate)}</time>
+                </p>
+                <h2 class="mt-2 font-serif">
+                  <a href={`/blog/${post.id}/`} class="text-[var(--color-text)] no-underline hover:text-[var(--color-accent)]">
+                    {post.data.title}
+                  </a>
+                </h2>
+                <p class="mt-3 text-[var(--color-text-muted)]">{post.data.description}</p>
+                {post.data.tags.length > 0 && (
+                  <ul class="mt-4 flex flex-wrap gap-2">
+                    {post.data.tags.map((t) => (
+                      <li class="brand-chip font-mono text-[0.8125rem]">#{t}</li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
