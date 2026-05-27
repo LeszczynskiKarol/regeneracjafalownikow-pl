@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from "../config/site";
 import ThemeToggle from "./ThemeToggle.astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   current?: string;
@@ -16,29 +17,40 @@ const navItems = [
 if (siteConfig.features.hasBlog) {
   navItems.push({ href: "/blog", label: "Blog", id: "blog" });
 }
-navItems.push({ href: "/#kontakt", label: "Kontakt", id: "kontakt" });
 ---
 
-<header class="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-bg)]/85 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/70">
+<header class="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-bg)]/85 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-bg)]/75">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-    <a href="/" class="flex items-center gap-2 font-serif text-lg font-semibold text-[var(--color-text)] no-underline">
-      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect x="2" y="2" width="28" height="28" rx="4" stroke="currentColor" stroke-width="2" />
-        <path d="M9 16h4l2-6 2 12 2-6h4" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-      </svg>
-      <span>Regeneracja Falowników</span>
+    <a href="/" class="group flex items-center gap-3 no-underline text-[var(--color-text)]" aria-label="Strona główna">
+      <Icon name="logo" size={38} class="transition-transform group-hover:rotate-3" />
+      <span class="flex flex-col leading-tight">
+        <span class="font-serif text-[1.05rem] font-semibold tracking-tight">Regeneracja Falowników</span>
+        <span class="text-[0.72rem] uppercase tracking-[0.16em] text-[var(--color-text-faint)]">Serwis · Diagnoza · Hamownia</span>
+      </span>
     </a>
 
-    <nav aria-label="Główne" class="hidden items-center gap-6 md:flex">
+    <nav aria-label="Główne" class="hidden items-center gap-1 md:flex">
       {navItems.map((item) => (
         <a
           href={item.href}
           aria-current={current === item.id ? "page" : undefined}
-          class="text-[0.9375rem] text-[var(--color-text-muted)] no-underline hover:text-[var(--color-text)]"
+          class={`rounded-md px-3 py-1.5 text-[0.9375rem] no-underline transition-colors ${
+            current === item.id
+              ? "text-[var(--color-accent)] bg-[var(--color-accent-soft)]"
+              : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)]"
+          }`}
         >
           {item.label}
         </a>
       ))}
+      <span class="mx-2 h-5 w-px bg-[var(--color-border)]" aria-hidden="true"></span>
+      <a
+        href="/#kontakt"
+        class="btn-primary"
+        style="padding: 0.5rem 1rem; font-size: 0.9rem;"
+      >
+        <Icon name="send" size={16} /> Wyceń naprawę
+      </a>
       <ThemeToggle />
     </nav>
 
@@ -47,7 +59,7 @@ navItems.push({ href: "/#kontakt", label: "Kontakt", id: "kontakt" });
       <button
         type="button"
         id="nav-toggle"
-        class="needs-js inline-flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-border)] text-[var(--color-text)]"
+        class="needs-js inline-flex h-10 w-10 items-center justify-center rounded-md border border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)]"
         aria-label="Otwórz menu"
         aria-expanded="false"
         aria-controls="mobile-nav"
@@ -71,6 +83,11 @@ navItems.push({ href: "/#kontakt", label: "Kontakt", id: "kontakt" });
           </a>
         </li>
       ))}
+      <li class="pt-2">
+        <a href="/#kontakt" class="btn-primary w-full justify-center">
+          <Icon name="send" size={16} /> Wyceń naprawę
+        </a>
+      </li>
     </ul>
   </div>
 </header>
